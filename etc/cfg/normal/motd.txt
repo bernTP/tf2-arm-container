@@ -1,0 +1,5 @@
+Welcome to TF2 ARM Server.
+
+For those (certaintly no one) who reads the motd :
+This server may be very slow since it's running on a arm server.
+This is a current experimentation, please give me your feedback if the gameplay is smooth or not.

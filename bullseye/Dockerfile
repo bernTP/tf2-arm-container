@@ -3,12 +3,13 @@
 ###########################################################
 FROM cm2network/steamcmd:root AS build_stage
 
-LABEL maintainer="walentinlamonos@gmail.com"
-
 ENV STEAMAPPID 232250
 ENV STEAMAPP tf
 ENV STEAMAPPDIR "${HOMEDIR}/${STEAMAPP}-dedicated"
-ENV DLURL https://raw.githubusercontent.com/CM2Walki/TF2
+ENV CFGDIR "${STEAMAPPDIR}/${STEAMAPP}/cfg"
+ENV CPU_MHZ 2000
+
+VOLUME [ "${STEAMAPPDIR}", "${CFGDIR}" ]
 
 RUN set -x \
 	# Add i386 architecture
@@ -24,8 +25,6 @@ RUN set -x \
 		libtinfo5:i386=6.2+20201114-2+deb11u2 \
 		libcurl3-gnutls:i386=7.74.0-1.3+deb11u9 \
 	&& mkdir -p "${STEAMAPPDIR}" \
-	# Add entry script
-	&& wget "${DLURL}/master/etc/entry.sh" -O "${HOMEDIR}/entry.sh" \
 	# Create autoupdate config
 	&& { \
 		echo '@ShutdownOnFailedCommand 1'; \
@@ -34,11 +33,7 @@ RUN set -x \
 		echo 'login anonymous'; \
 		echo 'app_update '"${STEAMAPPID}"''; \
 		echo 'quit'; \
-	   } > "${HOMEDIR}/${STEAMAPP}_update.txt" \
-	&& chmod +x "${HOMEDIR}/entry.sh" \
-	&& chown -R "${USER}:${USER}" "${HOMEDIR}/entry.sh" "${STEAMAPPDIR}" "${HOMEDIR}/${STEAMAPP}_update.txt" \
-	# Clean up
-	&& rm -rf /var/lib/apt/lists/*
+	   } > "${HOMEDIR}/${STEAMAPP}_update.txt"
 
 FROM build_stage AS bullseye-base
 
@@ -48,19 +43,25 @@ ENV SRCDS_FPSMAX=300 \
 	SRCDS_TV_PORT=27020 \
         SRCDS_NET_PUBLIC_ADDRESS="0" \
         SRCDS_IP="0" \
-	SRCDS_MAXPLAYERS=16 \
+	SRCDS_MAXPLAYERS=24 \
 	SRCDS_TOKEN=0 \
-	SRCDS_RCONPW="changeme" \
-	SRCDS_PW="changeme" \
-	SRCDS_STARTMAP="ctf_2fort" \
+	SRCDS_RCONPW="" \
+	SRCDS_PW="" \
+	SRCDS_STARTMAP="" \
 	SRCDS_REGION=3 \
-        SRCDS_HOSTNAME="New \"${STEAMAPP}\" Server" \
-        SRCDS_WORKSHOP_START_MAP=0 \
-        SRCDS_HOST_WORKSHOP_COLLECTION=0 \
-        SRCDS_WORKSHOP_AUTHKEY="" \
+	SRCDS_WORKSHOP_START_MAP=0 \
+	SRCDS_HOST_WORKSHOP_COLLECTION=0 \
+	SRCDS_WORKSHOP_AUTHKEY="" \
 	SRCDS_CFG="server.cfg" \
-	SRCDS_MAPCYCLE="mapcycle_default.txt" \
+	SRCDS_MAPCYCLE="mapcycle.txt" \
 	SRCDS_SECURED=1
+
+COPY "./etc/entry.sh" "${HOMEDIR}/entry.sh"
+
+RUN chmod +x "${HOMEDIR}/entry.sh" \
+	&& chown -R "${USER}:${USER}" "${HOMEDIR}/entry.sh" "${STEAMAPPDIR}" "${HOMEDIR}/${STEAMAPP}_update.txt" \
+	# Clean up
+	&& rm -rf /var/lib/apt/lists/*
 
 # Switch to user
 USER ${USER}
