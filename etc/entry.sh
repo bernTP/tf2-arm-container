@@ -1,7 +1,7 @@
 #!/bin/bash
 mkdir -p "${STEAMAPPDIR}" || true
 
-bash "${STEAMCMDDIR}/steamcmd.sh" +force_install_dir "${STEAMAPPDIR}" \
+box86 $BOX86_BASH "${STEAMCMDDIR}/steamcmd.sh" +force_install_dir "${STEAMAPPDIR}" \
 				+login anonymous \
 				+app_update "${STEAMAPPID}" \
 				+quit
@@ -33,7 +33,7 @@ else
     SRCDS_MAP_COMMAND="+map ${SRCDS_STARTMAP}"
 fi
 
-bash "${STEAMAPPDIR}/srcds_run" -game "${STEAMAPP}" -console -autoupdate \
+box64 $BOX64_BASH "${STEAMAPPDIR}/srcds_run_64" -game "${STEAMAPP}" -console -autoupdate \
             -steam_dir "${STEAMCMDDIR}" \
             -steamcmd_script "${HOMEDIR}/${STEAMAPP}_update.txt" \
             -usercon \

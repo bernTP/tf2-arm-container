@@ -1,5 +1,13 @@
 #!/bin/bash
 
+##
+## DEPRECATED : THIS IS FOR 32 BITS TF2 SERVER
+##
+
+echo "DEPRECATED : THIS IS FOR 32 BITS TF2 SERVER"
+echo "Continue ? (CTRL-C/SIGINT to abort)"
+read
+
 # allow arm kernel to run i386 executable (steamcmd and tf2 as srcds_linux)
 if [[ $(dpkg --print-architecture) != 'arm64' ]]; then
     echo "Your device is not arm."

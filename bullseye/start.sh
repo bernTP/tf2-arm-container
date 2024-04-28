@@ -1,9 +1,15 @@
 #!/bin/bash
 
-if [ -z "$1" ]; then
-    container_name="bernardesman"
-else
+if [ -n "$1" ]; then
+    if [[ $1 == "dev" ]]; then
+        container_flags="--user root --rm --entrypoint /bin/bash"
+        dev_flags="y"
+    else
+        container_flags="-d"
+    fi
     container_name="$1"
+else
+    container_name="bernardesman"
 fi
 
 if [ -z "$2" ]; then
@@ -28,13 +34,15 @@ SERV_CFG_TARGET="$SERV_TARGET/tf/cfg"
 SERV_CFG_SRC=$(realpath "../etc/cfg/$cfg_folder_name")
 
 mkdir -p "$SERV_SRC"
-sudo docker run -d -it --net=host --platform linux/amd64 \
+sudo docker run -it $container_flags --net=host \
     --name=$container_name \
     -v $SERV_SRC:$SERV_TARGET \
     -v $SERV_CFG_SRC:$SERV_CFG_TARGET \
     -e SRCDS_TOKEN=$SERVER_TOKEN \
     -e SRCDS_RCONPW=$RCONPWD \
-    tf2:latest
+    tf2_arm:latest
 
-# user expected to sigint to quit the log trace
-sudo docker logs -f $container_name
+if [ -z "$dev_flags" ]; then
+    # user expected to sigint to quit the log trace
+    sudo docker logs -f $container_name
+fi
