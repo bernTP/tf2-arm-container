@@ -31,9 +31,14 @@ SERV_TARGET="/home/steam/tf-dedicated"
 SERV_SRC="$HOME/$game_folder_name"
 
 SERV_CFG_TARGET="$SERV_TARGET/tf/cfg"
-SERV_CFG_SRC=$(realpath "../etc/cfg/$cfg_folder_name")
+SERV_CFG_SRC="$HOME/cfg_$game_folder_name"
+SERV_REPO_CFG_SRC=$(realpath "../etc/cfg/$cfg_folder_name")
 
 mkdir -p "$SERV_SRC"
+mkdir -p "$SERV_CFG_SRC"
+cp -r $SERV_REPO_CFG_SRC/* $SERV_CFG_SRC
+sudo chmod -R 777 $SERV_SRC
+sudo chmod -R 777 $SERV_CFG_SRC
 sudo docker run -it $container_flags --net=host \
     --name=$container_name \
     -v $SERV_SRC:$SERV_TARGET \

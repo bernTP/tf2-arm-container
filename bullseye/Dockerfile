@@ -13,20 +13,17 @@ VOLUME [ "${STEAMAPPDIR}", "${CFGDIR}" ]
 
 RUN set -x \
 	# Add i386 architecture
-	&& dpkg --add-architecture i386 \
 	&& dpkg --add-architecture amd64 \
 	# Install, update & upgrade packages
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends --no-install-suggests \
-		lib32z1:amd64 \
+		wget:amd64 \
+		ca-certificates:amd64 \
+		zlib1g:amd64 \
         libncurses5:amd64 \
-		libncurses5:i386 \
         libbz2-1.0:amd64 \
-		libbz2-1.0:i386 \
         libtinfo5:amd64 \
-		libtinfo5:i386 \
         libcurl3-gnutls:amd64 \
-		libcurl3-gnutls:i386 \
 	&& apt-get autoremove -y && apt-get clean \
 	&& mkdir -p "${STEAMAPPDIR}" \
 	# Create autoupdate config
@@ -63,8 +60,10 @@ ENV SRCDS_FPSMAX=300 \
 	SRCDS_SECURED=1
 
 COPY "./etc/entry.sh" "${HOMEDIR}/entry.sh"
+COPY "./etc/debug.sh" "${HOMEDIR}/debug.sh"
 
 RUN chmod +x "${HOMEDIR}/entry.sh" \
+	&& chmod +x "${HOMEDIR}/debug.sh" \
 	&& chown -R "${USER}:${USER}" "${HOMEDIR}/entry.sh" "${STEAMAPPDIR}" "${HOMEDIR}/${STEAMAPP}_update.txt"
 
 # Switch to user

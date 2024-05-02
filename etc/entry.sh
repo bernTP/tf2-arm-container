@@ -33,7 +33,7 @@ else
     SRCDS_MAP_COMMAND="+map ${SRCDS_STARTMAP}"
 fi
 
-box64 $BOX64_BASH "${STEAMAPPDIR}/srcds_run_64" -game "${STEAMAPP}" -console -autoupdate \
+box64 $BOX64_BASH "${STEAMAPPDIR}/srcds_run_64" -debug -game "${STEAMAPP}" -console -autoupdate \
             -steam_dir "${STEAMCMDDIR}" \
             -steamcmd_script "${HOMEDIR}/${STEAMAPP}_update.txt" \
             -usercon \

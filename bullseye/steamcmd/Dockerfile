@@ -17,19 +17,17 @@ RUN set -x \
 	&& apt-get update \
 	&& apt install -y wget gpg binutils xz-utils \
 	&& apt-get install libc6:armhf libtinfo6:armhf -y \
-	&& wget https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list \
 	&& wget https://ryanfortner.github.io/box86-debs/box86.list -O /etc/apt/sources.list.d/box86.list \
-	&& wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg \
 	&& wget -qO- https://ryanfortner.github.io/box86-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box86-debs-archive-keyring.gpg \
 	&& apt-get update \
-	&& apt-get install -y box64 box86-generic-arm:armhf \
+	&& apt-get install -y box86-generic-arm:armhf \
 	&& apt-get install -y --no-install-recommends --no-install-suggests \
-		lib32stdc++6:amd64=12.2.0-14 \
-		lib32gcc-s1:amd64=12.2.0-14 \
-		ca-certificates:amd64=20230311 \
-		nano=7.2-1 \
-		curl=7.88.1-10+deb12u5 \
-		locales=2.36-9+deb12u4 \
+		lib32stdc++6:amd64 \
+		lib32gcc-s1:amd64 \
+		ca-certificates:amd64 \
+		nano \
+		curl \
+		locales \
 	&& sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
 	&& dpkg-reconfigure --frontend=noninteractive locales \
 	&& rm -rf /var/lib/apt/lists/* \
@@ -59,12 +57,25 @@ RUN set -x \
 	&& mv "bin/bash" "/bin/bash_amd64" \
 	&& cd - && rm -r ${BASH_DIR}
 
+ENV BOX64_DIR "/tmp/box"
+
+# Install manually (wihtout the given libs)
+RUN set -x \
+	&& mkdir -p ${BOX64_DIR} \
+	&& cd ${BOX64_DIR} \
+	&& curl -L -o box.deb https://github.com/ryanfortner/box64-debs/raw/master/debian/box64_0.2.7+20240501.ee58b6a-1_arm64.deb \
+	&& ar -x box.deb \
+	&& tar -xf data.tar.xz \
+	&& mv usr/local/bin/box64 /usr/local/bin \
+	&& ls -lR \
+	&& mv usr/lib/x86_64-linux-gnu/libgcc_s.so.1 /lib/x86_64-linux-gnu \
+	&& cd - && rm -r ${BOX64_DIR}
+
 ENV BOX86_BASH "/bin/bash_i386"
 ENV BOX64_BASH "/bin/bash_amd64"
 
 RUN set -x \
 	# Create unprivileged user
-	&& export BOX86_BASH=/bin/bash_i386 \
 	&& useradd -u "${PUID}" -m "${USER}" \
 	# Download SteamCMD, execute as user
 	&& su "${USER}" -c \
