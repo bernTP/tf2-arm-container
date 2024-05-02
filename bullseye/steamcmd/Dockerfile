@@ -93,6 +93,9 @@ RUN set -x \
 	# # Symlink steamclient.so; So misconfigured dedicated servers can find it
  	&& ln -s "${STEAMCMDDIR}/linux64/steamclient.so" "/usr/lib/x86_64-linux-gnu/steamclient.so"
 
+# Old lib frmo debian buster that avoid segfault
+COPY "dl/libmvec.so.1" "/lib/x86_64-linux-gnu/libmvec.so.1"
+
 FROM build_stage AS bookworm-root
 WORKDIR ${STEAMCMDDIR}
 
