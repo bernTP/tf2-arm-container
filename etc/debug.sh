@@ -8,7 +8,6 @@ fi
 
 cd "${STEAMAPPDIR}"
 
-# GAMEROOT=$(echo $PWD)
 GAMEROOT=$(echo $PWD)
 
 PLATFORM_DIR="linux"

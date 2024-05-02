@@ -16,11 +16,12 @@ RUN set -x \
 	&& dpkg --add-architecture armhf \
 	&& apt-get update \
 	&& apt install -y wget gpg binutils xz-utils \
-	&& apt-get install libc6:armhf libtinfo6:armhf -y \
+	&& wget https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list \
 	&& wget https://ryanfortner.github.io/box86-debs/box86.list -O /etc/apt/sources.list.d/box86.list \
+	&& wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg \
 	&& wget -qO- https://ryanfortner.github.io/box86-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box86-debs-archive-keyring.gpg \
 	&& apt-get update \
-	&& apt-get install -y box86-generic-arm:armhf \
+	&& apt-get install -y libc6:armhf libtinfo6:armhf box64 box86-generic-arm:armhf \
 	&& apt-get install -y --no-install-recommends --no-install-suggests \
 		lib32stdc++6:amd64 \
 		lib32gcc-s1:amd64 \
@@ -58,19 +59,6 @@ RUN set -x \
 	&& cd - && rm -r ${BASH_DIR}
 
 ENV BOX64_DIR "/tmp/box"
-
-# Install manually (wihtout the given libs)
-RUN set -x \
-	&& mkdir -p ${BOX64_DIR} \
-	&& cd ${BOX64_DIR} \
-	&& curl -L -o box.deb https://github.com/ryanfortner/box64-debs/raw/master/debian/box64_0.2.7+20240501.ee58b6a-1_arm64.deb \
-	&& ar -x box.deb \
-	&& tar -xf data.tar.xz \
-	&& mv usr/local/bin/box64 /usr/local/bin \
-	&& ls -lR \
-	&& mv usr/lib/x86_64-linux-gnu/libgcc_s.so.1 /lib/x86_64-linux-gnu \
-	&& cd - && rm -r ${BOX64_DIR}
-
 ENV BOX86_BASH "/bin/bash_i386"
 ENV BOX64_BASH "/bin/bash_amd64"
 
@@ -81,7 +69,7 @@ RUN set -x \
 	&& su "${USER}" -c \
 		"mkdir -p \"${STEAMCMDDIR}\" \
                 && curl -fsSL 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz' | tar xvzf - -C \"${STEAMCMDDIR}\" \
-				&& box86 /bin/bash_i386 \"${STEAMCMDDIR}/steamcmd.sh\" +quit \
+				&& box86 \"${BOX86_BASH}\" \"${STEAMCMDDIR}/steamcmd.sh\" +quit \
                 ; ln -s \"${STEAMCMDDIR}/linux32/steamclient.so\" \"${STEAMCMDDIR}/steamservice.so\" \
                 && mkdir -p \"${HOMEDIR}/.steam/sdk32\" \
                 && ln -s \"${STEAMCMDDIR}/linux32/steamclient.so\" \"${HOMEDIR}/.steam/sdk32/steamclient.so\" \
@@ -93,7 +81,7 @@ RUN set -x \
 	# # Symlink steamclient.so; So misconfigured dedicated servers can find it
  	&& ln -s "${STEAMCMDDIR}/linux64/steamclient.so" "/usr/lib/x86_64-linux-gnu/steamclient.so"
 
-# Old lib frmo debian buster that avoid segfault
+# Old lib from debian buster that avoids crash
 COPY "dl/libmvec.so.1" "/lib/x86_64-linux-gnu/libmvec.so.1"
 
 FROM build_stage AS bookworm-root
