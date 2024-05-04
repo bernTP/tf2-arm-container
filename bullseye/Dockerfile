@@ -17,13 +17,13 @@ RUN set -x \
 	# Install, update & upgrade packages
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends --no-install-suggests \
-		wget:amd64 \
-		ca-certificates:amd64 \
-		zlib1g:amd64 \
-        libncurses5:amd64 \
-        libbz2-1.0:amd64 \
-        libtinfo5:amd64 \
-        libcurl3-gnutls:amd64 \
+		wget:amd64=1.21.3-1+b2 \
+		ca-certificates:amd64=20230311 \
+		zlib1g:amd64=1:1.2.13.dfsg-1 \
+		libncurses5:amd64=6.4-4 \
+		libbz2-1.0:amd64=1.0.8-5+b1 \
+		libtinfo5:amd64=6.4-4 \
+		libcurl3-gnutls:amd64=7.88.1-10+deb12u5 \
 	&& apt-get autoremove -y && apt-get clean \
 	&& mkdir -p "${STEAMAPPDIR}" \
 	# Create autoupdate config

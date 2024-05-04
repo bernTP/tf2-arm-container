@@ -1,7 +1,7 @@
 ############################################################
 # Dockerfile that contains SteamCMD for ARMV8
 ############################################################
-FROM --platform=linux/arm64/v8 debian:bookworm-slim as build_stage
+FROM --platform=linux/arm64/v8 debian:bookworm-20240423-slim as build_stage
 
 ARG PUID=1000
 
@@ -9,26 +9,38 @@ ENV USER steam
 ENV HOMEDIR "/home/${USER}"
 ENV STEAMCMDDIR "${HOMEDIR}/steamcmd"
 
+
+# && apt install -y --no-install-recommends --no-install-suggests \
+# wget=1.21.3-1+b1 \
+# gpg=2.2.40-1.1 \
+# xz-utils=5.4.1-0.2 \
+
 RUN set -x \
 	# for steamcmd even though it's a 32 bit binary
 	&& dpkg --add-architecture amd64 \
 	# for box86 that needs to run steamcmd
 	&& dpkg --add-architecture armhf \
 	&& apt-get update \
-	&& apt install -y wget gpg binutils xz-utils \
+	&& apt install -y --no-install-suggests \
+		wget=1.21.3-1+b1 \
+		gpg=2.2.40-1.1 \
+		xz-utils=5.4.1-0.2 \
+		binutils=2.40-2 \
+		curl=7.88.1-10+deb12u5 \
+		locales=2.36-9+deb12u4 \
 	&& wget https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list \
 	&& wget https://ryanfortner.github.io/box86-debs/box86.list -O /etc/apt/sources.list.d/box86.list \
 	&& wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg \
 	&& wget -qO- https://ryanfortner.github.io/box86-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box86-debs-archive-keyring.gpg \
 	&& apt-get update \
-	&& apt-get install -y libc6:armhf libtinfo6:armhf box64 box86-generic-arm:armhf \
 	&& apt-get install -y --no-install-recommends --no-install-suggests \
-		lib32stdc++6:amd64 \
-		lib32gcc-s1:amd64 \
-		ca-certificates:amd64 \
-		nano \
-		curl \
-		locales \
+		libc6:armhf=2.36-9+deb12u7 \
+		libtinfo6:armhf=6.4-4 \
+		box64 \
+		box86-generic-arm:armhf \
+		lib32stdc++6:amd64=12.2.0-14 \
+		lib32gcc-s1:amd64=12.2.0-14 \
+		ca-certificates:amd64=20230311 \
 	&& sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
 	&& dpkg-reconfigure --frontend=noninteractive locales \
 	&& rm -rf /var/lib/apt/lists/* \
