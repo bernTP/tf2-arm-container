@@ -58,7 +58,6 @@ RUN set -x \
 	&& mv "bin/bash" "/bin/bash_amd64" \
 	&& cd - && rm -r ${BASH_DIR}
 
-ENV BOX64_DIR "/tmp/box"
 ENV BOX86_BASH "/bin/bash_i386"
 ENV BOX64_BASH "/bin/bash_amd64"
 
@@ -80,9 +79,6 @@ RUN set -x \
                 && ln -s \"${STEAMCMDDIR}/steamcmd.sh\" \"${STEAMCMDDIR}/steam.sh\"" \
 	# # Symlink steamclient.so; So misconfigured dedicated servers can find it
  	&& ln -s "${STEAMCMDDIR}/linux64/steamclient.so" "/usr/lib/x86_64-linux-gnu/steamclient.so"
-
-# Old lib from debian buster that avoids crash
-COPY "dl/libmvec.so.1" "/lib/x86_64-linux-gnu/libmvec.so.1"
 
 FROM build_stage AS bookworm-root
 WORKDIR ${STEAMCMDDIR}
