@@ -33,12 +33,17 @@ else
     SRCDS_MAP_COMMAND="+map ${SRCDS_STARTMAP}"
 fi
 
+if [ -n "${SRCDS_TV_PORT}" ]; then
+    SRCDS_TV_COMMAND="+tv_port $SRCDS_TV_PORT"
+fi
+
 box64 $BOX64_BASH "${STEAMAPPDIR}/srcds_run_64" -debug -game "${STEAMAPP}" -console -autoupdate \
             -steam_dir "${STEAMCMDDIR}" \
             -steamcmd_script "${HOMEDIR}/${STEAMAPP}_update.txt" \
             -usercon \
             -port "${SRCDS_PORT}" \
             +clientport "${SRCDS_CLIENT_PORT}" \
+            "$SRCDS_TV_COMMAND" \
             +maxplayers "${SRCDS_MAXPLAYERS}" \
             "$SRCDS_MAP_COMMAND" \
             +sv_setsteamaccount "${SRCDS_TOKEN}" \
