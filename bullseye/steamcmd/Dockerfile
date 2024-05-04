@@ -9,11 +9,9 @@ ENV USER steam
 ENV HOMEDIR "/home/${USER}"
 ENV STEAMCMDDIR "${HOMEDIR}/steamcmd"
 
-
-# && apt install -y --no-install-recommends --no-install-suggests \
-# wget=1.21.3-1+b1 \
-# gpg=2.2.40-1.1 \
-# xz-utils=5.4.1-0.2 \
+ENV BASH_DIR "/tmp/bash_install"
+ENV BOX86_BASH "/bin/bash_i386"
+ENV BOX64_BASH "/bin/bash_amd64"
 
 RUN set -x \
 	# for steamcmd even though it's a 32 bit binary
@@ -44,36 +42,22 @@ RUN set -x \
 	&& sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
 	&& dpkg-reconfigure --frontend=noninteractive locales \
 	&& rm -rf /var/lib/apt/lists/* \
-	&& apt-get remove gpg -y && apt-get autoremove -y && apt-get clean
-
-ENV BASH_DIR "/tmp/bash_install"
-
-# Install i386 bash (kind of hacky)
-RUN set -x \
-	mkdir -p ${BASH_DIR} \
+	&& mkdir -p ${BASH_DIR} \
 	&& wget 'http://ftp.debian.org/debian/pool/main/b/bash/bash_5.2.15-2+b2_i386.deb' -P "${BASH_DIR}" \
 	&& cd ${BASH_DIR} \
 	&& mv "bash_5.2.15-2+b2_i386.deb" "bash.deb" \
 	&& ar -x "bash.deb" \
 	&& tar -xf data.tar.xz \
 	&& mv "bin/bash" "/bin/bash_i386" \
-	&& cd - && rm -r ${BASH_DIR}
-
-# Install amd64 bash (kind of hacky)
-RUN set -x \
-	mkdir -p ${BASH_DIR} \
+	&& cd - && rm -r ${BASH_DIR} \
+	&& mkdir -p ${BASH_DIR} \
 	&& wget 'http://ftp.debian.org/debian/pool/main/b/bash/bash_5.2.15-2+b2_amd64.deb' -P "${BASH_DIR}" \
 	&& cd ${BASH_DIR} \
 	&& mv "bash_5.2.15-2+b2_amd64.deb" "bash.deb" \
 	&& ar -x "bash.deb" \
 	&& tar -xf data.tar.xz \
 	&& mv "bin/bash" "/bin/bash_amd64" \
-	&& cd - && rm -r ${BASH_DIR}
-
-ENV BOX86_BASH "/bin/bash_i386"
-ENV BOX64_BASH "/bin/bash_amd64"
-
-RUN set -x \
+	&& cd - && rm -r ${BASH_DIR} \
 	# Create unprivileged user
 	&& useradd -u "${PUID}" -m "${USER}" \
 	# Download SteamCMD, execute as user
@@ -90,7 +74,8 @@ RUN set -x \
                 && ln -s \"${STEAMCMDDIR}/linux64/steamcmd\" \"${STEAMCMDDIR}/linux64/steam\" \
                 && ln -s \"${STEAMCMDDIR}/steamcmd.sh\" \"${STEAMCMDDIR}/steam.sh\"" \
 	# # Symlink steamclient.so; So misconfigured dedicated servers can find it
- 	&& ln -s "${STEAMCMDDIR}/linux64/steamclient.so" "/usr/lib/x86_64-linux-gnu/steamclient.so"
+ 	&& ln -s "${STEAMCMDDIR}/linux64/steamclient.so" "/usr/lib/x86_64-linux-gnu/steamclient.so" \
+	&& apt-get remove wget xz-utils binutils gpg -y && apt-get autoremove -y && apt-get clean
 
 FROM build_stage AS bookworm-root
 WORKDIR ${STEAMCMDDIR}
