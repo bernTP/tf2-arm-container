@@ -30,7 +30,7 @@ This TF2 container assumes that the tf2 installation is persistent and might be 
 
 `$i` represents the number of active containers.
 
- 1. Container Name: (Default: `tf_arm_$i`) *if set as `dev`, you can start the container as root with a `/bin/bash` entrypoint.*
+ 1. Container Name: (Default: `tf2_arm_$i`) *if set as `dev`, you can start the container as root with a `/bin/bash` entrypoint.*
  2. Game Installation Directory: (Default: `$HOME/tf2`)
  3. Configuration Directory: (Default: `$PWD/etc/normal`)
  4. Server Account Token: (Default: `ARR_SERVER_TOKENS[$i]`)
