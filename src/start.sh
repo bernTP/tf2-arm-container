@@ -1,6 +1,6 @@
 #!/bin/bash
 
-container_ids=$(sudo docker ps --filter "name=tf2_arm_" --format "{{.ID}}")
+container_ids=$(sudo docker ps -a --filter "name=tf2_arm_" --format "{{.ID}}")
 container_array=($container_ids)
 container_nb=${#container_array[@]}
 new_container_id=$container_nb
