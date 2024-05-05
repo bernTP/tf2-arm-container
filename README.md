@@ -18,7 +18,7 @@ cd src
 
 **Every utils scripts are contained inside the `src` directory.**
 
-This TF2 container assumes that the tf2 installation is persistent and might be shared across multiple docker containers. There are 2 volumes that you need to set, the TF2 installation and the `cfg` folder.
+The TF2 installation might be persistent and might be shared across multiple docker containers. There are 2 volumes that you may set, the TF2 installation and the `cfg` directory.
 
 **First** you'll need to create a `bashenv` file inside `src` where you'll put :
 
@@ -26,13 +26,15 @@ This TF2 container assumes that the tf2 installation is persistent and might be 
  - ARR_SERVER_TOKENS=() # [Server account tokens](https://steamcommunity.com/dev/managegameservers)
  \# Example : ARR_SERVER_TOKENS=("5E7AF12F4DB6C559A8E59D9F9245478B", "4E2F9D7A85194F5AB0B56D295FEC4979")
 
+There is an example file named `bashenv.example`.
+
 **Before starting anything, here is the `start.sh` arguments list based on index :**
 
 `$i` represents the number of active containers.
 
  1. Container Name: (Default: `tf2_arm_$i`) *if set as `dev`, you can start the container as root with a `/bin/bash` entrypoint.*
  2. Game Installation Directory: (Default: `$HOME/tf2`)
- 3. Configuration Directory: (is the realpath from $PWD/etc/cfg/${Configuration Directory}. If it fails, it's considered to be the fullpath) (Default: `normal`)
+ 3. Configuration Directory: (is the realpath from `$PWD/etc/cfg/${Configuration Directory}`. If it fails, it's considered to be the fullpath) (Default: `normal`)
  4. Configuration Volume Directory: (Default: `$HOME/cfg_${Configuration Directory}`)
  5. Server Account Token: (Default: `${ARR_SERVER_TOKENS[$i]}`)
 
