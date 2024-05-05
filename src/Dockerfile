@@ -1,7 +1,7 @@
 ###########################################################
 # Dockerfile that builds a TF2 Gameserver
 ###########################################################
-FROM steamcmd_arm:latest AS build_stage
+FROM mhktp/steamcmd-arm:latest AS build_stage
 
 ENV STEAMAPPID 232250
 ENV STEAMAPP tf
