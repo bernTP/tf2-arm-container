@@ -18,21 +18,27 @@ else
 fi
 
 if [ -z "$2" ]; then
-    game_folder_name="tf2"
+    game_folder_path="$HOME/tf2"
 else
-    game_folder_name="$2"
+    game_folder_path="$2"
 fi
 
 if [ -z "$3" ]; then
-    cfg_folder_name="normal"
+    cfg_folder_path="normal"
 else
-    cfg_folder_name="$3"
+    cfg_folder_path="$3"
+fi
+
+if [ -z "$4" ]; then
+    cfg_volume_path="$HOME/cfg_$cfg_folder_path"
+else
+    cfg_volume_path="$4"
 fi
 
 # get passwords from this (incomplete)
 . bashenv
 
-if [ -z "$4" ]; then
+if [ -z "$5" ]; then
     server_token_length=${#ARR_SERVER_TOKENS[@]}
     if (( new_container_id < server_token_length )); then
         SERVER_TOKEN=${ARR_SERVER_TOKENS[$new_container_id]}
@@ -40,15 +46,15 @@ if [ -z "$4" ]; then
         echo "Error : no more server account token... using none"
     fi
 else
-    SERVER_TOKEN="$2"
+    SERVER_TOKEN="$5"
 fi
 
 SERV_TARGET="/home/steam/tf-dedicated"
-SERV_SRC="$HOME/$game_folder_name"
+SERV_SRC=$game_folder_path
 
 SERV_CFG_TARGET="$SERV_TARGET/tf/cfg"
-SERV_CFG_SRC="$HOME/cfg_$game_folder_name"
-SERV_REPO_CFG_SRC=$(realpath "../etc/cfg/$cfg_folder_name")
+SERV_CFG_SRC=$cfg_volume_path
+SERV_REPO_CFG_SRC=$(realpath "../etc/cfg/$cfg_folder_path" || $cfg_folder_path)
 
 mkdir -p "$SERV_SRC"
 mkdir -p "$SERV_CFG_SRC"
