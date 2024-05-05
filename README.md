@@ -32,13 +32,19 @@ This TF2 container assumes that the tf2 installation is persistent and might be 
 
  1. Container Name: (Default: `tf2_arm_$i`) *if set as `dev`, you can start the container as root with a `/bin/bash` entrypoint.*
  2. Game Installation Directory: (Default: `$HOME/tf2`)
- 3. Configuration Directory: (Default: `$PWD/etc/normal`)
- 4. Server Account Token: (Default: `ARR_SERVER_TOKENS[$i]`)
+ 3. Configuration Directory: (is the realpath from $PWD/etc/cfg/${Configuration Directory}. If it fails, it's considered to be the fullpath) (Default: `normal`)
+ 4. Configuration Volume Directory: (Default: `$HOME/cfg_${Configuration Directory}`)
+ 5. Server Account Token: (Default: `${ARR_SERVER_TOKENS[$i]}`)
 
 ### Configurations
 Before doing anything, you will need to edit some files in the `etc` directory.
-There is the `cfg` directory that contains the `normal` configuration directory.
-The `start.sh` script will copy and overwrite everything inside the configuration volume. You can have multiple configuration directories in your system.
+There is the `cfg` directory that contains the `normal` configuration directory. You can put different configuration directories for different type of servers. Furthermore, you can directly modify the files inside `normal` or make a copy, but don't forget to configure the `start.sh` arguments like this :
+```sh
+./start.sh "" "" myconfdir "/path/to/cfg_myconfdir"
+```
+Notice : the `"/path/to/cfg_myconfdir"` will be automatically created if it doesn't exists.
+
+The `start.sh` script will copy and overwrite everything inside the configuration volume, so be careful before adding any new files in the config directory.
 
 ## Credits
 
