@@ -68,4 +68,4 @@ sudo docker run -it $container_flags --net=host \
     -v $SERV_CFG_SRC:$SERV_CFG_TARGET \
     -e SRCDS_TOKEN=$SERVER_TOKEN \
     -e SRCDS_RCONPW=$RCONPWD \
-    mhktp/tf2-arm-server:latest
+    berntp/tf2-arm-server:latest
