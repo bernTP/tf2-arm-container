@@ -59,8 +59,8 @@ SERV_REPO_CFG_SRC=$(realpath "../etc/cfg/$cfg_folder_path" || $cfg_folder_path)
 mkdir -p "$SERV_SRC"
 mkdir -p "$SERV_CFG_SRC"
 cp -r $SERV_REPO_CFG_SRC/* $SERV_CFG_SRC
-
-# The container should be run in rootless mode if tf2 installation is in a non-root user directory
+sudo chmod -R 777 $SERV_SRC
+sudo chmod -R 777 $SERV_CFG_SRC
 
 docker run -it $container_flags --net=host \
     --name=$container_name \
