@@ -24,8 +24,8 @@ RUN set -x \
 		gpg=2.2.40-1.1 \
 		xz-utils=5.4.1-0.2 \
 		binutils=2.40-2 \
-		curl=7.88.1-10+deb12u5 \
-		locales=2.36-9+deb12u4 \
+		curl=7.88.1-10+deb12u6 \
+		locales=2.36-9+deb12u7 \
 	&& wget https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list \
 	&& wget https://ryanfortner.github.io/box86-debs/box86.list -O /etc/apt/sources.list.d/box86.list \
 	&& wget -qO- https://ryanfortner.github.io/box64-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box64-debs-archive-keyring.gpg \
@@ -43,17 +43,17 @@ RUN set -x \
 	&& dpkg-reconfigure --frontend=noninteractive locales \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& mkdir -p ${BASH_DIR} \
-	&& wget 'http://ftp.debian.org/debian/pool/main/b/bash/bash_5.2.15-2+b2_i386.deb' -P "${BASH_DIR}" \
+	&& wget 'http://ftp.debian.org/debian/pool/main/b/bash/bash_5.2.15-2+b7_i386.deb' -P "${BASH_DIR}" \
 	&& cd ${BASH_DIR} \
-	&& mv "bash_5.2.15-2+b2_i386.deb" "bash.deb" \
+	&& mv "bash_5.2.15-2+b7_i386.deb" "bash.deb" \
 	&& ar -x "bash.deb" \
 	&& tar -xf data.tar.xz \
 	&& mv "bin/bash" "/bin/bash_i386" \
 	&& cd - && rm -r ${BASH_DIR} \
 	&& mkdir -p ${BASH_DIR} \
-	&& wget 'http://ftp.debian.org/debian/pool/main/b/bash/bash_5.2.15-2+b2_amd64.deb' -P "${BASH_DIR}" \
+	&& wget 'http://ftp.debian.org/debian/pool/main/b/bash/bash_5.2.15-2+b7_amd64.deb' -P "${BASH_DIR}" \
 	&& cd ${BASH_DIR} \
-	&& mv "bash_5.2.15-2+b2_amd64.deb" "bash.deb" \
+	&& mv "bash_5.2.15-2+b7_amd64.deb" "bash.deb" \
 	&& ar -x "bash.deb" \
 	&& tar -xf data.tar.xz \
 	&& mv "bin/bash" "/bin/bash_amd64" \

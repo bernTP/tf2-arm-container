@@ -1,6 +1,6 @@
 #!/bin/bash
 
-container_ids=$(sudo docker ps -a --filter "name=tf2_arm_" --format "{{.ID}}")
+container_ids=$(docker ps -a --filter "name=tf2_arm_" --format "{{.ID}}")
 container_array=($container_ids)
 container_nb=${#container_array[@]}
 new_container_id=$container_nb
@@ -62,7 +62,7 @@ cp -r $SERV_REPO_CFG_SRC/* $SERV_CFG_SRC
 
 # The container should be run in rootless mode if tf2 installation is in a non-root user directory
 
-sudo docker run -it $container_flags --net=host \
+docker run -it $container_flags --net=host \
     --name=$container_name \
     -v $SERV_SRC:$SERV_TARGET \
     -v $SERV_CFG_SRC:$SERV_CFG_TARGET \
