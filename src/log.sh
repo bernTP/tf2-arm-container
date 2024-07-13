@@ -6,4 +6,4 @@ else
     container_name="tf2_arm_$1"
 fi
 
-docker logs -f $container_name
+sudo docker logs -f $container_name

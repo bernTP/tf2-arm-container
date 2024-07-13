@@ -2,3 +2,7 @@ bashenv
 dumps/
 
 src/push.sh
+
+# config files
+etc/cfg/*
+!etc/cfg/normal

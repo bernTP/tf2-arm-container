@@ -1,6 +1,6 @@
 #!/bin/bash
 
-container_ids=$(docker ps -a --filter "name=tf2_arm_" --format "{{.ID}}")
+container_ids=$(sudo docker ps -a --filter "name=tf2_arm_" --format "{{.ID}}")
 container_array=($container_ids)
 container_nb=${#container_array[@]}
 new_container_id=$container_nb
@@ -62,7 +62,7 @@ cp -r $SERV_REPO_CFG_SRC/* $SERV_CFG_SRC
 sudo chmod -R 777 $SERV_SRC
 sudo chmod -R 777 $SERV_CFG_SRC
 
-docker run -it $container_flags --net=host \
+sudo docker run -it $container_flags --net=host \
     --name=$container_name \
     -v $SERV_SRC:$SERV_TARGET \
     -v $SERV_CFG_SRC:$SERV_CFG_TARGET \
