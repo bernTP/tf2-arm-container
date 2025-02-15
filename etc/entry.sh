@@ -37,7 +37,7 @@ if [ -n "${SRCDS_TV_PORT}" ]; then
     SRCDS_TV_COMMAND="+tv_port $SRCDS_TV_PORT"
 fi
 
-box64 $BOX64_BASH "${STEAMAPPDIR}/srcds_run_64" -game "${STEAMAPP}" -console -autoupdate \
+box86 $BOX86_BASH "${STEAMAPPDIR}/srcds_run" -game "${STEAMAPP}" -console -autoupdate \
             -steam_dir "${STEAMCMDDIR}" \
             -steamcmd_script "${HOMEDIR}/${STEAMAPP}_update.txt" \
             -usercon \

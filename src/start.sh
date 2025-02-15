@@ -35,6 +35,12 @@ else
     cfg_volume_path="$4"
 fi
 
+if [ -z "$5" ]; then
+    addons_volume_path="$HOME/addons_$cfg_folder_path"
+else
+    addons_volume_path="$5"
+fi
+
 # get passwords from this (incomplete)
 . bashenv
 
@@ -55,17 +61,21 @@ SERV_SRC=$game_folder_path
 SERV_CFG_TARGET="$SERV_TARGET/tf/cfg"
 SERV_CFG_SRC=$cfg_volume_path
 SERV_REPO_CFG_SRC=$(realpath "../etc/cfg/$cfg_folder_path" || $cfg_folder_path)
+SERV_ADDONS_SRC=$addons_volume_path
+SERV_ADDONS_TARGET="$SERV_TARGET/tf/addons"
 
 mkdir -p "$SERV_SRC"
 mkdir -p "$SERV_CFG_SRC"
 cp -r $SERV_REPO_CFG_SRC/* $SERV_CFG_SRC
 sudo chmod -R 777 $SERV_SRC
 sudo chmod -R 777 $SERV_CFG_SRC
+sudo chmod -R 777 $SERV_ADDONS_SRC
 
 sudo docker run -it $container_flags --net=host \
     --name=$container_name \
     -v $SERV_SRC:$SERV_TARGET \
     -v $SERV_CFG_SRC:$SERV_CFG_TARGET \
+    -v $SERV_ADDONS_SRC:$SERV_ADDONS_TARGET \
     -e SRCDS_TOKEN=$SERVER_TOKEN \
     -e SRCDS_RCONPW=$RCONPWD \
-    berntp/tf2-arm-server:latest
+    berntp/tf2-arm-server:sourcemod
