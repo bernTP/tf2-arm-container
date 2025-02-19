@@ -1,7 +1,7 @@
 ############################################################
 # Dockerfile that contains SteamCMD for ARMV8
 ############################################################
-FROM --platform=linux/arm64/v8 debian:bookworm-20240423-slim as build_stage
+FROM --platform=linux/arm64/v8 debian:bookworm-20250203-slim as build_stage
 
 ARG PUID=1000
 
@@ -24,7 +24,7 @@ RUN set -x \
 		gpg=2.2.40-1.1 \
 		xz-utils=5.4.1-0.2 \
 		binutils=2.40-2 \
-		curl=7.88.1-10+deb12u6 \
+		curl=7.88.1-10+deb12u8 \
 		locales=2.36-9+deb12u7 \
 	&& wget https://ryanfortner.github.io/box64-debs/box64.list -O /etc/apt/sources.list.d/box64.list \
 	&& wget https://ryanfortner.github.io/box86-debs/box86.list -O /etc/apt/sources.list.d/box86.list \
@@ -32,7 +32,7 @@ RUN set -x \
 	&& wget -qO- https://ryanfortner.github.io/box86-debs/KEY.gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/box86-debs-archive-keyring.gpg \
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends --no-install-suggests \
-		libc6:armhf=2.36-9+deb12u7 \
+		libc6:armhf=2.36-9+deb12u9 \
 		libtinfo6:armhf=6.4-4 \
 		box64 \
 		box86-generic-arm:armhf \

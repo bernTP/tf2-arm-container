@@ -23,7 +23,7 @@ RUN set -x \
 		libncurses5:amd64=6.4-4 \
 		libbz2-1.0:amd64=1.0.8-5+b1 \
 		libtinfo5:amd64=6.4-4 \
-		libcurl3-gnutls:amd64=7.88.1-10+deb12u5 \
+		libcurl3-gnutls:amd64=7.88.1-10+deb12u8 \
 	&& apt-get autoremove -y && apt-get clean \
 	&& mkdir -p "${STEAMAPPDIR}" \
 	# Create autoupdate config
